@@ -575,18 +575,18 @@ if MLLIB_SPARK_VERSION >= 1.3:
 # Linear Algebra Tests #
 MLLIB_LINALG_TEST_OPTS = MLLIB_COMMON_OPTS + [
     # The number of rows for the matrix
-    OptionSet("num-rows", [1000000], can_scale=True),
+    OptionSet("num-rows", [10000], can_scale=True),
     # The number of columns for the matrix
-    OptionSet("num-cols", [1000], can_scale=False),
+    OptionSet("num-cols", [100], can_scale=False),
     # The number of top singular values wanted for SVD and PCA
-    OptionSet("rank", [50], can_scale=False)
+    OptionSet("rank", [10], can_scale=False)
 ]
 # Linear Algebra Tests which take more time (slightly smaller settings) #
 MLLIB_BIG_LINALG_TEST_OPTS = MLLIB_COMMON_OPTS + [
     # The number of rows for the matrix
-    OptionSet("num-rows", [1000000], can_scale=True),
+    OptionSet("num-rows", [10000], can_scale=True),
     # The number of columns for the matrix
-    OptionSet("num-cols", [500], can_scale=False),
+    OptionSet("num-cols", [100], can_scale=False),
     # The number of top singular values wanted for SVD and PCA
     OptionSet("rank", [10], can_scale=False)
 ]
