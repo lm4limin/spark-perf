@@ -159,7 +159,7 @@ COMMON_OPTS = [
     # How many times to run each experiment - used to warm up system caches.
     # This OptionSet should probably only have a single value (i.e., length 1)
     # since it doesn't make sense to have multiple values here.
-    OptionSet("num-trials", [10]),
+    OptionSet("num-trials", [1]),
     # Extra pause added between trials, in seconds. For runs with large amounts
     # of shuffle data, this gives time for buffer cache write-back.
     OptionSet("inter-trial-wait", [3])
@@ -563,10 +563,10 @@ MLLIB_TESTS += [("kmeans", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
     MLLIB_JAVA_OPTS, [ConstantOption("kmeans")] + MLLIB_CLUSTERING_TEST_OPTS)]
 
 MLLIB_GMM_TEST_OPTS = MLLIB_COMMON_OPTS + [
-    OptionSet("num-points", [1000000], can_scale=True),
+    OptionSet("num-points", [10000], can_scale=True),
     OptionSet("num-columns", [100], can_scale=False),
-    OptionSet("num-centers", [20], can_scale=False),
-    OptionSet("num-iterations", [20])]
+    OptionSet("num-centers", [5], can_scale=False),
+    OptionSet("num-iterations", [3])]
 
 if MLLIB_SPARK_VERSION >= 1.3:
     MLLIB_TESTS += [("gmm", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
