@@ -528,13 +528,13 @@ if MLLIB_SPARK_VERSION >= 1.2:
 # Recommendation Tests #
 MLLIB_RECOMMENDATION_TEST_OPTS = MLLIB_COMMON_OPTS + [
      # The number of users
-     OptionSet("num-users", [6000000], can_scale=True),
+     OptionSet("num-users", [60000], can_scale=True),
      # The number of products
-     OptionSet("num-products", [5000000], can_scale=False),
+     OptionSet("num-products", [50000], can_scale=False),
      # The number of ratings
-     OptionSet("num-ratings", [50000000], can_scale=True),
+     OptionSet("num-ratings", [500000], can_scale=True),
      # The number of iterations for ALS
-     OptionSet("num-iterations", [10]),
+     OptionSet("num-iterations", [3]),
      # The rank of the factorized matrix model
      OptionSet("rank", [10]),
      # The regularization parameter
@@ -607,9 +607,11 @@ MLLIB_BLOCK_MATRIX_MULT_TEST_OPTS = MLLIB_COMMON_OPTS + [
     OptionSet("n", [10000], can_scale=False),
     OptionSet("block-size", [1024], can_scale=False)]
 
-if MLLIB_SPARK_VERSION >= 1.3:
-   MLLIB_TESTS += [("block-matrix-mult", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-                   MLLIB_JAVA_OPTS, [ConstantOption("block-matrix-mult")] + MLLIB_BLOCK_MATRIX_MULT_TEST_OPTS)]
+#===============================================================================
+# if MLLIB_SPARK_VERSION >= 1.3:
+#    MLLIB_TESTS += [("block-matrix-mult", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#                    MLLIB_JAVA_OPTS, [ConstantOption("block-matrix-mult")] + MLLIB_BLOCK_MATRIX_MULT_TEST_OPTS)]
+#===============================================================================
 
 # Statistic Toolkit Tests #
 MLLIB_STATS_TEST_OPTS = MLLIB_COMMON_OPTS
@@ -634,21 +636,23 @@ MLLIB_CHI_SQ_MAT_TEST_OPTS = MLLIB_STATS_TEST_OPTS + \
                              [OptionSet("num-rows", [20000], can_scale=True),
                               OptionSet("num-cols", [0], can_scale=False)]
 
-if MLLIB_SPARK_VERSION >= 1.1:
-    MLLIB_TESTS += [("pearson", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("pearson")] + MLLIB_PEARSON_TEST_OPTS)]
-
-    MLLIB_TESTS += [("spearman", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("spearman")] + MLLIB_SPEARMAN_TEST_OPTS)]
-
-    MLLIB_TESTS += [("chi-sq-feature", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("chi-sq-feature")] + MLLIB_CHI_SQ_FEATURE_TEST_OPTS)]
-
-    MLLIB_TESTS += [("chi-sq-gof", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("chi-sq-gof")] + MLLIB_CHI_SQ_GOF_TEST_OPTS)]
-
-    MLLIB_TESTS += [("chi-sq-mat", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("chi-sq-mat")] + MLLIB_CHI_SQ_MAT_TEST_OPTS)]
+#===============================================================================
+# if MLLIB_SPARK_VERSION >= 1.1:
+#     MLLIB_TESTS += [("pearson", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("pearson")] + MLLIB_PEARSON_TEST_OPTS)]
+# 
+#     MLLIB_TESTS += [("spearman", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("spearman")] + MLLIB_SPEARMAN_TEST_OPTS)]
+# 
+#     MLLIB_TESTS += [("chi-sq-feature", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("chi-sq-feature")] + MLLIB_CHI_SQ_FEATURE_TEST_OPTS)]
+# 
+#     MLLIB_TESTS += [("chi-sq-gof", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("chi-sq-gof")] + MLLIB_CHI_SQ_GOF_TEST_OPTS)]
+# 
+#     MLLIB_TESTS += [("chi-sq-mat", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("chi-sq-mat")] + MLLIB_CHI_SQ_MAT_TEST_OPTS)]
+#===============================================================================
 
 # Feature Transformation Tests #
 
@@ -661,9 +665,11 @@ MLLIB_WORD2VEC_TEST_OPTS = MLLIB_FEATURE_TEST_OPTS + \
                             OptionSet("num-iterations", [3], can_scale=False),
                             OptionSet("min-count", [5], can_scale=False)]
 
-if MLLIB_SPARK_VERSION >= 1.3:  # TODO: make it work in 1.2
-    MLLIB_TESTS += [("word2vec", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("word2vec")] + MLLIB_WORD2VEC_TEST_OPTS)]
+#===============================================================================
+# if MLLIB_SPARK_VERSION >= 1.3:  # TODO: make it work in 1.2
+#     MLLIB_TESTS += [("word2vec", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("word2vec")] + MLLIB_WORD2VEC_TEST_OPTS)]
+#===============================================================================
 
 # Frequent Pattern Matching Tests #
 
