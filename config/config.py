@@ -18,7 +18,7 @@ from sparkperf.config_utils import FlagSet, JavaOptionSet, OptionSet, ConstantOp
 # ================================ #
 
 # Point to an installation of Spark on the cluster.
-SPARK_HOME_DIR = "/root/spark"
+SPARK_HOME_DIR = "/mnt/nfs_dir/spark-1.4.0/spark"
 
 # Use a custom configuration directory
 SPARK_CONF_DIR = SPARK_HOME_DIR + "/conf"
@@ -48,7 +48,8 @@ IS_MESOS_MODE = "mesos" in SPARK_CLUSTER_URL
 USE_CLUSTER_SPARK = True
 
 # URL of the HDFS installation in the Spark EC2 cluster
-HDFS_URL = "hdfs://%s:9000/test/" % socket.gethostname()
+#HDFS_URL = "hdfs://%s:9000/test/" % socket.gethostname()
+HDFS_URL = "hdfs://minli2.sl.cloud9.ibm.com:9000/test/" 
 
 # Set the following if not using existing Spark installation
 # Commit id and repo used if you are not using an existing Spark cluster
@@ -70,22 +71,22 @@ PREP_SPARK = not USE_CLUSTER_SPARK
 
 # Whether to restart the Master and all Workers
 # This should always be false for Yarn
-RESTART_SPARK_CLUSTER = True
+RESTART_SPARK_CLUSTER = False
 RESTART_SPARK_CLUSTER = RESTART_SPARK_CLUSTER and not IS_YARN_MODE
 
 # Rsync SPARK_HOME to all the slaves or not
-RSYNC_SPARK_HOME = True
+RSYNC_SPARK_HOME = False
 
 # Which tests to run
-RUN_SPARK_TESTS = True
+RUN_SPARK_TESTS = False
 RUN_PYSPARK_TESTS = False
 RUN_STREAMING_TESTS = False
-RUN_MLLIB_TESTS = False
+RUN_MLLIB_TESTS = True
 RUN_PYTHON_MLLIB_TESTS = False
 
 # Which tests to prepare. Set this to true for the first
 # installation or whenever you make a change to the tests.
-PREP_SPARK_TESTS = True
+PREP_SPARK_TESTS = False
 PREP_PYSPARK_TESTS = False
 PREP_STREAMING_TESTS = False
 PREP_MLLIB_TESTS = False
@@ -152,7 +153,7 @@ COMMON_JAVA_OPTS = [
     JavaOptionSet("spark.locality.wait", [str(60 * 1000 * 1000)])
 ]
 # Set driver memory here
-SPARK_DRIVER_MEMORY = "20g"
+SPARK_DRIVER_MEMORY = "4g"
 # The following options value sets are shared among all tests.
 COMMON_OPTS = [
     # How many times to run each experiment - used to warm up system caches.
@@ -367,7 +368,7 @@ MLLIB_PERF_TEST_RUNNER = "mllib.perf.TestRunner"
 
 # Set this to 1.0, 1.1, 1.2, ... (the major version) to test MLlib with a particular Spark version.
 # Note: You should also build mllib-perf using -Dspark.version to specify the same version.
-MLLIB_SPARK_VERSION = 1.2
+MLLIB_SPARK_VERSION = 1.4
 
 MLLIB_JAVA_OPTS = COMMON_JAVA_OPTS
 if MLLIB_SPARK_VERSION >= 1.1:
@@ -391,15 +392,15 @@ MLLIB_COMMON_OPTS = COMMON_OPTS + [
 # Regression and Classification Tests #
 MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS = MLLIB_COMMON_OPTS + [
     # The number of rows or examples
-    OptionSet("num-examples", [1000000], can_scale=True),
+    OptionSet("num-examples", [10000], can_scale=True),
     # The number of features per example
-    OptionSet("num-features", [10000], can_scale=False)
+    OptionSet("num-features", [100], can_scale=False)
 ]
 
 # Generalized Linear Model (GLM) Tests #
 MLLIB_GLM_TEST_OPTS = MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS + [
     # The number of iterations for SGD
-    OptionSet("num-iterations", [20]),
+    OptionSet("num-iterations", [3]),
     # The step size for SGD
     OptionSet("step-size", [0.001]),
     # Regularization type: none, l1, l2
@@ -455,9 +456,11 @@ NAIVE_BAYES_TEST_OPTS = MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS + [
     OptionSet("model-type", ["Multinomial"]),    
 ]
 
-MLLIB_TESTS += [("naive-bayes", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("naive-bayes")] +
-    NAIVE_BAYES_TEST_OPTS)]
+#===============================================================================
+# MLLIB_TESTS += [("naive-bayes", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("naive-bayes")] +
+#     NAIVE_BAYES_TEST_OPTS)]
+#===============================================================================
 
 if MLLIB_SPARK_VERSION >= 1.4:
     NAIVE_BAYES_TEST_OPTS_BERNOULLI = MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS + [
@@ -470,10 +473,12 @@ if MLLIB_SPARK_VERSION >= 1.4:
         # MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS + [
         OptionSet("model-type", ["Bernoulli"]),
     ]
-
-    MLLIB_TESTS += [("naive-bayes-bernoulli", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("naive-bayes")] +
-        NAIVE_BAYES_TEST_OPTS_BERNOULLI)]
+#===============================================================================
+# 
+#     MLLIB_TESTS += [("naive-bayes-bernoulli", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("naive-bayes")] +
+#         NAIVE_BAYES_TEST_OPTS_BERNOULLI)]
+#===============================================================================
 
 # Decision Trees #
 MLLIB_DECISION_TREE_TEST_OPTS = MLLIB_COMMON_OPTS + [
@@ -514,9 +519,11 @@ if MLLIB_SPARK_VERSION >= 1.2:
         OptionSet("feature-subset-strategy", ["auto"])
     ]
 
-MLLIB_TESTS += [("decision-tree", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("decision-tree")] +
-    MLLIB_DECISION_TREE_TEST_OPTS)]
+#===============================================================================
+# MLLIB_TESTS += [("decision-tree", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("decision-tree")] +
+#     MLLIB_DECISION_TREE_TEST_OPTS)]
+#===============================================================================
 
 # Recommendation Tests #
 MLLIB_RECOMMENDATION_TEST_OPTS = MLLIB_COMMON_OPTS + [
@@ -543,13 +550,13 @@ MLLIB_TESTS += [("als", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
 # Clustering Tests #
 MLLIB_CLUSTERING_TEST_OPTS = MLLIB_COMMON_OPTS + [
      # The number of points
-     OptionSet("num-points", [1000000], can_scale=True),
+     OptionSet("num-points", [10000], can_scale=True),
      # The number of features per point
-     OptionSet("num-columns", [10000], can_scale=False),
+     OptionSet("num-columns", [100], can_scale=False),
      # The number of centers
-     OptionSet("num-centers", [20]),
+     OptionSet("num-centers", [5]),
      # The number of iterations for KMeans
-     OptionSet("num-iterations", [20])
+     OptionSet("num-iterations", [3])
 ]
 
 MLLIB_TESTS += [("kmeans", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
@@ -668,9 +675,11 @@ MLLIB_FP_GROWTH_TEST_OPTS = MLLIB_FPM_TEST_OPTS + \
                              OptionSet("num-items", [1000], can_scale=False),
                              OptionSet("min-support", [0.01], can_scale=False)]
 
-if MLLIB_SPARK_VERSION >= 1.3:
-    MLLIB_TESTS += [("fp-growth", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("fp-growth")] + MLLIB_FP_GROWTH_TEST_OPTS)]
+#===============================================================================
+# if MLLIB_SPARK_VERSION >= 1.3:
+#     MLLIB_TESTS += [("fp-growth", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("fp-growth")] + MLLIB_FP_GROWTH_TEST_OPTS)]
+#===============================================================================
 
 # Python MLlib tests
 PYTHON_MLLIB_TESTS = []
