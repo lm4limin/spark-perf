@@ -1,4 +1,6 @@
 package mllib.perf.util
+
+import org.apache.spark.SparkContext
 import org.json4s.DefaultFormats
 import org.json4s.JsonDSL._
 import org.json4s.JsonAST._
@@ -7,7 +9,7 @@ import org.json4s.jackson.JsonMethods._
 object DataTwitterETL{
   implicit val formats = DefaultFormats
 
-  def run(): JValue = {
+  def run(sc: SparkContext): JValue = {
     val json = """{"foo":1, "bar":{"foo":2}}"""
     val ast = parse(json).asInstanceOf[JObject]
 
