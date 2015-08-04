@@ -7,7 +7,7 @@ import org.json4s.jackson.JsonMethods._
 object DataTwitterETL{
   implicit val formats = DefaultFormats
 
-  def run(args: Array[String]): Unit = {
+  def run(): Unit = {
     val json = """{"foo":1, "bar":{"foo":2}}"""
     val ast = parse(json).asInstanceOf[JObject]
 

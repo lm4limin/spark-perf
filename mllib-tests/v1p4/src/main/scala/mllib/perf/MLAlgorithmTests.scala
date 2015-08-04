@@ -606,6 +606,9 @@ class DecisionTreeTest(sc: SparkContext) extends DecisionTreeTests(sc) {
  
 // data twitter ETL
 class DataTwitterETLTest(sc: SparkContext) extends PerfTest{
+  override def createInputData(seed: Long) = {
+    println("Empty for now" )
+  }
   override def run(): JValue = {
     var start = System.currentTimeMillis()
     DataTwitterETL.run()
