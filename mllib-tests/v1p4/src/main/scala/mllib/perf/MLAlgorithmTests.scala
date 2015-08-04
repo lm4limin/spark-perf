@@ -606,6 +606,7 @@ class DecisionTreeTest(sc: SparkContext) extends DecisionTreeTests(sc) {
  
 // data twitter ETL
 class DataTwitterETLTest(sc: SparkContext) extends PerfTest{
+  addOptionsToParser()
   override def createInputData(seed: Long) = {
     println("Empty for now" )
   }
@@ -613,6 +614,6 @@ class DataTwitterETLTest(sc: SparkContext) extends PerfTest{
     var start = System.currentTimeMillis()
     DataTwitterETL.run()
     val etlTime = (System.currentTimeMillis() - start).toDouble / 1000.0      
-    Map("ETLtime" -> etlTime)    
+    Map("time" -> etlTime)    
   }
 }
