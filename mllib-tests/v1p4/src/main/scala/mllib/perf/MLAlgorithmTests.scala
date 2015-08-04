@@ -612,7 +612,7 @@ class DataTwitterETLTest(sc: SparkContext) extends PerfTest{
   }
   override def run(): JValue = {
     var start = System.currentTimeMillis()
-    DataTwitterETL.run()
+    DataTwitterETL.run(sc)
     val etlTime = (System.currentTimeMillis() - start).toDouble / 1000.0      
     Map("time" -> etlTime)    
   }
