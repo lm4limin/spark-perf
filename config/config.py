@@ -390,7 +390,7 @@ MLLIB_COMMON_OPTS = COMMON_OPTS + [
 # Algorithms available in Spark-1.0 #
 
 MLLIB_TESTS += [("DataTwitterETL", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("DataTwitterETL")] + MLLIB_COMM_OPTS)]
+    MLLIB_JAVA_OPTS, [ConstantOption("DataTwitterETL")] + MLLIB_COMMON_OPTS)]
 
 # Regression and Classification Tests #
 MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS = MLLIB_COMMON_OPTS + [
