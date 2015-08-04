@@ -89,7 +89,7 @@ RUN_PYTHON_MLLIB_TESTS = False
 PREP_SPARK_TESTS = False
 PREP_PYSPARK_TESTS = False
 PREP_STREAMING_TESTS = False
-PREP_MLLIB_TESTS = False
+PREP_MLLIB_TESTS = True
 
 # Whether to warm up local disks (warm-up is only necesary on EC2).
 DISK_WARMUP = False
@@ -159,7 +159,7 @@ COMMON_OPTS = [
     # How many times to run each experiment - used to warm up system caches.
     # This OptionSet should probably only have a single value (i.e., length 1)
     # since it doesn't make sense to have multiple values here.
-    OptionSet("num-trials", [1]),
+    OptionSet("num-trials", [3]),
     # Extra pause added between trials, in seconds. For runs with large amounts
     # of shuffle data, this gives time for buffer cache write-back.
     OptionSet("inter-trial-wait", [3])
@@ -389,6 +389,9 @@ MLLIB_COMMON_OPTS = COMMON_OPTS + [
 
 # Algorithms available in Spark-1.0 #
 
+MLLIB_TESTS += [("DataTwitterETL", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+    MLLIB_JAVA_OPTS, [ConstantOption("DataTwitterETL")] + MLLIB_COMM_OPTS)]
+
 # Regression and Classification Tests #
 MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS = MLLIB_COMMON_OPTS + [
     # The number of rows or examples
@@ -424,8 +427,10 @@ MLLIB_GLM_REGRESSION_TEST_OPTS = MLLIB_GLM_TEST_OPTS + [
     OptionSet("loss", ["l2"])
 ]
 
-MLLIB_TESTS += [("glm-regression", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("glm-regression")] + MLLIB_GLM_REGRESSION_TEST_OPTS)]
+#===============================================================================
+# MLLIB_TESTS += [("glm-regression", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("glm-regression")] + MLLIB_GLM_REGRESSION_TEST_OPTS)]
+#===============================================================================
 
 # Classification Tests #
 MLLIB_CLASSIFICATION_TEST_OPTS = MLLIB_GLM_TEST_OPTS + [
@@ -441,9 +446,11 @@ MLLIB_GLM_CLASSIFICATION_TEST_OPTS = MLLIB_CLASSIFICATION_TEST_OPTS + [
     OptionSet("loss", ["logistic", "hinge"])
 ]
 
-MLLIB_TESTS += [("glm-classification", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("glm-classification")] +
-    MLLIB_GLM_CLASSIFICATION_TEST_OPTS)]
+#===============================================================================
+# MLLIB_TESTS += [("glm-classification", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("glm-classification")] +
+#     MLLIB_GLM_CLASSIFICATION_TEST_OPTS)]
+#===============================================================================
 
 NAIVE_BAYES_TEST_OPTS = MLLIB_REGRESSION_CLASSIFICATION_TEST_OPTS + [
     # Expected fraction of examples which are negative
@@ -543,9 +550,11 @@ MLLIB_RECOMMENDATION_TEST_OPTS = MLLIB_COMMON_OPTS + [
      FlagSet("implicit-prefs", [False])
 ]
 
-MLLIB_TESTS += [("als", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("als")] +
-    MLLIB_RECOMMENDATION_TEST_OPTS)]
+#===============================================================================
+# MLLIB_TESTS += [("als", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("als")] +
+#     MLLIB_RECOMMENDATION_TEST_OPTS)]
+#===============================================================================
 
 # Clustering Tests #
 MLLIB_CLUSTERING_TEST_OPTS = MLLIB_COMMON_OPTS + [
@@ -559,8 +568,10 @@ MLLIB_CLUSTERING_TEST_OPTS = MLLIB_COMMON_OPTS + [
      OptionSet("num-iterations", [3])
 ]
 
-MLLIB_TESTS += [("kmeans", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("kmeans")] + MLLIB_CLUSTERING_TEST_OPTS)]
+#===============================================================================
+# MLLIB_TESTS += [("kmeans", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("kmeans")] + MLLIB_CLUSTERING_TEST_OPTS)]
+#===============================================================================
 
 MLLIB_GMM_TEST_OPTS = MLLIB_COMMON_OPTS + [
     OptionSet("num-points", [10000], can_scale=True),
@@ -568,9 +579,11 @@ MLLIB_GMM_TEST_OPTS = MLLIB_COMMON_OPTS + [
     OptionSet("num-centers", [5], can_scale=False),
     OptionSet("num-iterations", [3])]
 
-if MLLIB_SPARK_VERSION >= 1.3:
-    MLLIB_TESTS += [("gmm", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-        MLLIB_JAVA_OPTS, [ConstantOption("gmm")] + MLLIB_CLUSTERING_TEST_OPTS)]
+#===============================================================================
+# if MLLIB_SPARK_VERSION >= 1.3:
+#     MLLIB_TESTS += [("gmm", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#         MLLIB_JAVA_OPTS, [ConstantOption("gmm")] + MLLIB_CLUSTERING_TEST_OPTS)]
+#===============================================================================
 
 # Linear Algebra Tests #
 MLLIB_LINALG_TEST_OPTS = MLLIB_COMMON_OPTS + [
@@ -591,15 +604,17 @@ MLLIB_BIG_LINALG_TEST_OPTS = MLLIB_COMMON_OPTS + [
     OptionSet("rank", [10], can_scale=False)
 ]
 
-MLLIB_TESTS += [("svd", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("svd")] + MLLIB_BIG_LINALG_TEST_OPTS)]
-
-MLLIB_TESTS += [("pca", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("pca")] + MLLIB_LINALG_TEST_OPTS)]
-
-MLLIB_TESTS += [("summary-statistics", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
-    MLLIB_JAVA_OPTS, [ConstantOption("summary-statistics")] +
-    MLLIB_LINALG_TEST_OPTS)]
+#===============================================================================
+# MLLIB_TESTS += [("svd", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("svd")] + MLLIB_BIG_LINALG_TEST_OPTS)]
+# 
+# MLLIB_TESTS += [("pca", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("pca")] + MLLIB_LINALG_TEST_OPTS)]
+# 
+# MLLIB_TESTS += [("summary-statistics", MLLIB_PERF_TEST_RUNNER, SCALE_FACTOR,
+#     MLLIB_JAVA_OPTS, [ConstantOption("summary-statistics")] +
+#     MLLIB_LINALG_TEST_OPTS)]
+#===============================================================================
 
 MLLIB_BLOCK_MATRIX_MULT_TEST_OPTS = MLLIB_COMMON_OPTS + [
     OptionSet("m", [20000], can_scale=True),
