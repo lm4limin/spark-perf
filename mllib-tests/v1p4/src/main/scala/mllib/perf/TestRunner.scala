@@ -50,6 +50,7 @@ object TestRunner {
         case "block-matrix-mult" => new BlockMatrixMultTest(sc)
         case "word2vec" => new Word2VecTest(sc)
         case "gmm" => new GaussianMixtureTest(sc)
+        case "DataTwitterETL" => new DataTwitterETLTest(sc)
       }
       test.initialize(testName, perfTestArgs)
       // Generate a new dataset for each test

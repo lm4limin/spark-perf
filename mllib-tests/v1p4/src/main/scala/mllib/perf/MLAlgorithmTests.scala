@@ -16,6 +16,7 @@ import org.apache.spark.mllib.tree.model.RandomForestModel
 import org.apache.spark.rdd.RDD
 
 import mllib.perf.util.{DataLoader, DataGenerator}
+import mllib.perf.util.DataTwitterETL
 
 /** Parent class for tests which run on a large dataset. */
 abstract class RegressionAndClassificationTests[M](sc: SparkContext) extends PerfTest {
@@ -598,5 +599,17 @@ class DecisionTreeTest(sc: SparkContext) extends DecisionTreeTests(sc) {
       throw new IllegalArgumentException(s"Bad label-type parameter " +
         s"given to DecisionTreeTest: $labelType")
     }
+  }
+
+
+}
+ 
+// data twitter ETL
+class DataTwitterETLTest(sc: SparkContext) extends PerfTest{
+  override def run(): JValue = {
+    var start = System.currentTimeMillis()
+    DataTwitterETL.run()
+    val etlTime = (System.currentTimeMillis() - start).toDouble / 1000.0      
+    Map("ETLtime" -> etlTime)    
   }
 }
