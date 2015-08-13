@@ -9,7 +9,7 @@ import org.json4s.jackson.JsonMethods._
 object DataTwitterETL{
   implicit val formats = DefaultFormats
 
-  def run(sc: SparkContext): JValue = {
+  def run(sc: SparkContext): Unit = {
     val json = """{"foo":1, "bar":{"foo":2}}"""
     val ast = parse(json).asInstanceOf[JObject]
 
@@ -20,12 +20,12 @@ object DataTwitterETL{
     val data = sc.textFile(input)
     //val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble)))
     val parsedData = data.map{s => 
-      val ast = parse(s).asInstanceOf[JObject]
-      val tweet= (ast \ "body").extract[String]
-      println(tweet)
-      tweet
+      val ast = parse(s)
+//      val tweet= (ast \ "body").extract[String]
+      println(pretty(ast))
+      pretty(ast) 
     }
-    parseData.saveAsTextFile("/small-1k-output.txt")
+    parsedData.saveAsTextFile("/small-1k-output.txt")
     
     
   }

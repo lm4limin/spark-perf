@@ -89,7 +89,7 @@ RUN_PYTHON_MLLIB_TESTS = False
 PREP_SPARK_TESTS = False
 PREP_PYSPARK_TESTS = False
 PREP_STREAMING_TESTS = False
-PREP_MLLIB_TESTS = True
+PREP_MLLIB_TESTS = False
 
 # Whether to warm up local disks (warm-up is only necesary on EC2).
 DISK_WARMUP = False
@@ -133,7 +133,7 @@ assert SCALE_FACTOR > 0, "SCALE_FACTOR must be > 0."
 # If set, removes the first N trials for each test from all reported statistics. Useful for
 # tests which have outlier behavior due to JIT and other system cache warm-ups. If any test
 # returns fewer N + 1 results, an exception is thrown.
-IGNORED_TRIALS = 2
+IGNORED_TRIALS = 0
 
 # Command used to launch Scala or Java.
 
@@ -159,7 +159,7 @@ COMMON_OPTS = [
     # How many times to run each experiment - used to warm up system caches.
     # This OptionSet should probably only have a single value (i.e., length 1)
     # since it doesn't make sense to have multiple values here.
-    OptionSet("num-trials", [3]),
+    OptionSet("num-trials", [1]),
     # Extra pause added between trials, in seconds. For runs with large amounts
     # of shuffle data, this gives time for buffer cache write-back.
     OptionSet("inter-trial-wait", [3])
