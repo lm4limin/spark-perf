@@ -27,8 +27,14 @@ object DataTwitterETL{
       //println(str)
       //pretty(ast)
       //if(str!="") 
-        Some(str) 
-    }.fliter(_.length>0)
+        //(str.toString).filter(_.length>0).filter( _ > ' ')
+//        res=str.toString.filter( _ > ' ')
+	//val res=str.toString.toLowerCase().replaceAll("[^ A-Za-z0-9]+", "")
+	val res=str.toString.toLowerCase().replaceAll("[^ A-Za-z:/]+", "")
+//	println(res)
+        res
+    }.filter(_.length>0)//.filter(_ >' ')
+//     }
     parsedData.saveAsTextFile("/small-1k-output.txt")
     
     
