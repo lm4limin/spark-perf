@@ -5,6 +5,7 @@ import org.json4s.DefaultFormats
 import org.json4s.JsonDSL._
 import org.json4s.JsonAST._
 import org.json4s.jackson.JsonMethods._
+import scala.util.{Try,Success, Failure}
 
 object DataTwitterETL{
   implicit val formats = DefaultFormats
@@ -20,11 +21,14 @@ object DataTwitterETL{
     val data = sc.textFile(input)
     //val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble)))
     val parsedData = data.map{s => 
-      val ast = parse(s)
+      val ast = parse(s).asInstanceOf[JObject]
+      val str = (Try((ast \ "body").extract[String]).recover {case e => ""}).transform({i=>Success(i)},{e=>Success(e)}).get
 //      val tweet= (ast \ "body").extract[String]
-      println(pretty(ast))
-      pretty(ast) 
-    }
+      //println(str)
+      //pretty(ast)
+      //if(str!="") 
+        Some(str) 
+    }.fliter(_.length>0)
     parsedData.saveAsTextFile("/small-1k-output.txt")
     
     
